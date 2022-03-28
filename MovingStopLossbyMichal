@@ -1,0 +1,32 @@
+void MovingSLbyMichal(int IloscPipsow)
+  {
+   double pips = 1*pow(0.1,Digits);
+   double cena =IloscPipsow*pips;
+   double sl_buy = Bid-cena;
+   double sl_sell = Ask+cena;
+
+   for(int i=0; i<OrdersTotal(); i++) // Pętla sprawdza wszystkie pozycje
+     {
+      if(OrderSelect(i,SELECT_BY_POS)==true) // Obrabia pozycję o wartości i
+        {
+         if(OrderSymbol()==ChartSymbol()) // Jeżeli symbol wykresu jest równy symbolowi pozycji
+           {
+            if(OrderType()==0)//Dla zamówień kupna
+              {
+               if(OrderStopLoss()==0 || OrderStopLoss()<sl_buy)
+                 {
+                 bool Modify = OrderModify(OrderTicket(),OrderOpenPrice(),sl_buy,OrderTakeProfit(),0,clrGreen);
+                 }
+              }
+            else
+               if(OrderType()==1)//Dla zamówień sprzedaży
+                 {
+                  if(OrderStopLoss()==0 || OrderStopLoss()>sl_sell)
+                    {
+                    bool Modify = OrderModify(OrderTicket(),OrderOpenPrice(),sl_sell,OrderTakeProfit(),0,clrGreen);
+                    }
+                 }
+           }
+        }
+     }
+  }
